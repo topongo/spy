@@ -2,15 +2,20 @@ import curses
 import json
 from random import choice, shuffle
 from time import sleep
+from sys import argv
+
+with open("places") as f:
+  places = f.readlines(False)
+  # print(places)
 
 
-places = json.load(open("luoghi.json"))
+MESSAGE = "passa il telefono a "
 
 def main_local(scr, luogo):
   spy = choice(gente)
-  for i in gente:
+  for n, i in enumerate(gente):
     scr.clear()
-    scr.addstr(0, 0, f"passa il telefono a {i}, {i} premi invio.")
+    scr.addstr(0, 0, f"passa il telefono al prossimo e premi invio")
     while scr.getch() != ord("\n"):
        pass
     scr.clear()
@@ -22,7 +27,8 @@ def main_local(scr, luogo):
   scr.getch()
   with open("spy", "w+") as s:
     s.write(spy)
-  curses.napms(1000*60*6)
+
+  curses.napms(1000*60*10)
   return spy
 
 
@@ -33,9 +39,8 @@ def main_telegram(luogo, master):
 
 with open("people") as p:
   gente = p.read().split()
-shuffle(gente)
 place = choice(places, )
 if len(argv) > 1 and argv[1] == "telegram":
   main_telegram(place)
 else:
-  print(curses.wrapper(main, place))
+  print(curses.wrapper(main_local, place))
